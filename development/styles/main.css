@@ -1,0 +1,34 @@
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
+
+[ng-click] {
+    cursor: pointer;
+}
+
+body {
+    padding-top: 80px;
+}
+
+.movie-tile {
+    margin-bottom: 20px;
+    padding-top: 20px;
+    text-align: center;
+    -webkit-transition: opacity 1s ease-in-out;
+    -moz-transition: opacity 1s ease-in-out;
+    -ms-transition: opacity 1s ease-in-out;
+    -o-transition: opacity 1s ease-in-out;
+    transition: opacity 1s ease-in-out;
+}
+.movie-tile>img {
+    width: 220px;
+    height: 342px;
+}
+.movie-tile:hover {
+    background-color: #EEE;
+    cursor: pointer;
+}
+
+.unrevealed {
+    opacity: 0;
+}

@@ -1,0 +1,49 @@
+
+                          Fresh Tomatoes
+
+  What is it?
+  -----------
+
+  This is the first project in Udacity's Nanodegree Program. The project
+  includes Python code that will execute on the server-side and compile a
+  static HTML page. This page displays movies held in an object with a youtube
+  trailer, title, poster image, and other information.
+  This particular project compiles modularized HTML that includes Bootstrap and
+  AngularJS components. It purposely excludes dynamic/real-time capabilities of
+  Angular (causing headaches for the developer) in order to
+  demonstrate server-side code's ability to compile and distribute content to
+  the client.
+
+  How does it work?
+  ------------------
+
+  The main stages of this Python code are the class definition (media.py), class
+  instantiations (entertainment_center.py), and the insertion of class data in
+  html (fresh_tomatoes.py). Run fresh_tomatoes.py and the site will compile and
+  launch a browser.
+  There are also files in the (/etc) folder to ease development/modification of
+  code, but are not part of the main project.
+
+  Documentation
+  -------------
+
+  To run the core of the project (fresh_tomatoes.py), you only need to run
+  'python fresh_tomatoes.py' in the terminal, and maintain this file structure:
+ >movies/
+    |-- precompiled/
+    |   |-- precompiled.html
+    |   |-- movies.json
+    |-- fresh_tomatoes.py
+    |-- entertainment_center.py
+    |-- media.py
+
+  Installation
+  ------------
+
+  All that is needed is Python. The rest will work itself out.
+
+  Contacts
+  --------
+
+     o Contact me at school.kde@gmail.com or have a look at my current tinkering
+       at shtav.com

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Fresh Tomatoes!</title>
+  <!-- Bootstrap 3 -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+
+  <!--main.css-->
+  <style>[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
+
+[ng-click] {
+    cursor: pointer;
+}
+
+body {
+    padding-top: 80px;
+}
+
+.movie-tile {
+    margin-bottom: 20px;
+    padding-top: 20px;
+    text-align: center;
+    -webkit-transition: opacity 1s ease-in-out;
+    -moz-transition: opacity 1s ease-in-out;
+    -ms-transition: opacity 1s ease-in-out;
+    -o-transition: opacity 1s ease-in-out;
+    transition: opacity 1s ease-in-out;
+}
+.movie-tile>img {
+    width: 220px;
+    height: 342px;
+}
+.movie-tile:hover {
+    background-color: #EEE;
+    cursor: pointer;
+}
+
+.unrevealed {
+    opacity: 0;
+}
+</style>
+  <!--main.css-->
+  <!--modal.css-->
+  <style>.my-modal {
+    background-color: black;
+    background-size: cover;
+    color: #ffffff;
+    border-radius: 0;
+}
+
+.movie-links a {
+    height: 70px;
+    color: #ffffff;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+}
+@media screen and (max-width: 767px) { .movie-links a { height: 110px } }
+
+
+.movie-links a[disabled="disabled"] {
+    opacity: .3;
+    cursor: not-allowed;
+}
+
+.movie-links .itunes { background-image: url("http://www.kitguru.net/wp-content/uploads/2014/12/Itunes-logo.png"); }
+
+.movie-links .imdb { background-image: url("http://icons.iconarchive.com/icons/danleech/simple/512/imdb-icon.png"); }
+
+.movie-links .amazon { background-image: url("http://www.directdriveopener.com/v/vspfiles/assets/images/Amazon-Logo.png"); }
+
+.movie-links a .overlay {
+    position: absolute;
+    margin-left: -15px;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    color: black;
+    background-color: rgba(255, 255, 255, 1);
+    opacity: 0;
+    -webkit-transition: opacity .5s ease-out;
+    -moz-transition: opacity .5s ease-out;
+    -ms-transition: opacity .5s ease-out;
+    -o-transition: opacity .5s ease-out;
+    transition: opacity .5s ease-out;
+}
+
+.movie-links a:hover .overlay{
+    opacity: 1;
+}
+
+.no-pad {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+/* MOVIE INFO STYLES */
+.movie-info {
+    padding: 5px;
+    overflow-y: auto;
+    height: 210px;
+}
+@media screen and (min-width: 768px) {
+    .movie-info {
+        height: 120px;
+    }
+}
+@media screen and (min-width: 992px) {
+    .movie-info {
+        height: 240px;
+    }
+}
+
+.modal-exit {
+    display: block;
+    position: absolute;
+    top: -1em;
+    right: -2em;
+    z-index: 1000000000;
+}
+.modal-exit .glyphicon {
+    font-size: 2em;
+    color: #ffffff;
+}
+@media screen and (max-width: 767px) {
+    .modal-dialog {
+        margin-top: 4em;
+    }
+    .modal-exit {
+        top: -2em;
+        right: -.7em;
+    }
+}</style>
+  <!--modal.css-->
+  <!--modal.html-->
+  <script type="text/ng-template" id="templates/modal.html">
+<div class="my-modal row">
+  <div class="col-sm-9 no-pad">
+    <div class='embed-responsive embed-responsive-16by9'>
+      <iframe class="embed-responsive-item" ng-src="{{url}}" frameborder='0' allowfullscreen></iframe>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-3">
+    <div class="row">
+      <div class="movie-links col-xs-6 col-sm-12">
+        <div class="row">
+          <a ng-click="redirectTo(movie.imdb)" class="imdb col-xs-12" ng-disabled="movie.imdb == ''" href="">
+            <div class="overlay">
+              <h5>Go to IMDb</h5>
+              <i class="glyphicon glyphicon-new-window"></i>
+            </div>
+          </a>
+          <a ng-click="redirectTo(movie.amazon)" class="amazon col-xs-6" ng-disabled="movie.amazon == ''" href="">
+            <div class="overlay">
+              <h5>Buy/Rent on Amazon</h5>
+              <i class="glyphicon glyphicon-new-window"></i>
+            </div>
+          </a>
+          <a ng-click="redirectTo(movie.itunes)" class="itunes col-xs-6" ng-disabled="movie.itunes == ''" href="">
+            <div class="overlay">
+              <h5>Buy/Rent on iTunes</h5>
+              <i class="glyphicon glyphicon-new-window"></i>
+            </div>
+          </a></div>
+      </div>
+      <div class="movie-info col-xs-6 col-sm-12">
+        <ul class="list-unstyled">
+          <li>
+            <p><strong>Release: </strong>{{movie.release}}</p>
+          </li>
+          <li>
+            <p><strong>Director: </strong>{{movie.director}}</p>
+          </li>
+          <li>
+            <p><strong>Stars: </strong>{{movie.actors}}</p>
+          </li>
+          <li>
+            <p><strong>Synopsis: </strong>{{movie.story_line}}</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div ng-click="$dismiss()" class="modal-exit">
+  <i class="glyphicon glyphicon-remove-circle"></i>
+</div>
+</script>
+  <!--modal.html-->
+
+</head>
+
+<body ng-app="myApp" ng-controller="MainCtrl">
+
+<!-- Page Header -->
+<div class="container">
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Fresh Tomatoes Movie Trailers</a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Page Header -->
+
+<!-- Main Page Content -->
+<div class="container ng-cloak">
+  
+  <div ng-click="openModal({'itunes': 'https://itunes.apple.com/us/movie/the-great-dictator/id481843688', 'poster_image_url': 'http://shelleysdavies.com/wp-content/uploads/2012/11/olly-moss-the-great-dictator.jpg', 'title': 'The Great Dictator', 'director': 'Charlie Chaplin', 'amazon': 'http://www.amazon.com/The-Great-Dictator-Charles-Chaplin/dp/B004DHNQGQ', 'actors': 'Charlie Chaplin, Jack Oakie, Reginald Gardiner, Henry Daniell, Billy Gilbert', 'story_line': 'A Jewish Barber is mistaken for the dictator that has been terrorizing the world.', 'release': '1940', 'imdb': 'http://www.imdb.com/title/tt0032553/', 'trailer_youtube_id': '4sfJxdytYn4', 'trailer_youtube_url': 'https://www.youtube.com/watch?v=4sfJxdytYn4'})" class="col-md-4 col-sm-6 col-xs-12 movie-tile" ng-class="{'unrevealed': moviesRevealed < 0}">
+    <img src="http://shelleysdavies.com/wp-content/uploads/2012/11/olly-moss-the-great-dictator.jpg">
+    <h2>The Great Dictator</h2>
+  </div>
+
+  <div ng-click="openModal({'itunes': 'https://itunes.apple.com/us/movie/toy-story/id188703840', 'poster_image_url': 'http://www.rotoscopers.com/wp-content/uploads/2013/10/Toy-Story-Poster.jpg', 'title': 'Toy Story', 'director': 'John Lasseter', 'amazon': 'http://www.amazon.com/Toy-Story-Tom-Hanks/dp/B000059XUT', 'actors': 'Tom Hanks, Tim Allen, Don Rickles, Jim Varney, Wallace Shawn, Laurie Metcalf, Annie Potts, John Ratzenberger', 'story_line': 'A story of a boy and his toys that come to life', 'release': '1995', 'imdb': 'http://www.imdb.com/title/tt0114709/', 'trailer_youtube_id': 'KYz2wyBy3kc', 'trailer_youtube_url': 'https://youtu.be/KYz2wyBy3kc'})" class="col-md-4 col-sm-6 col-xs-12 movie-tile" ng-class="{'unrevealed': moviesRevealed < 1}">
+    <img src="http://www.rotoscopers.com/wp-content/uploads/2013/10/Toy-Story-Poster.jpg">
+    <h2>Toy Story</h2>
+  </div>
+
+  <div ng-click="openModal({'itunes': '', 'poster_image_url': 'http://ia.media-imdb.com/images/M/MV5BMTI1NTg1MTE3MF5BMl5BanBnXkFtZTcwNzA4NDgyMQ@@._V1_SX640_SY720_.jpg', 'title': 'Manos: The Hands of Fate', 'director': 'Harold P. Warren', 'amazon': 'http://www.amazon.com/Manos-Hands-Fate-Bettie-Burns/dp/B0000AGWMF', 'actors': 'Bettie Burns, George Cavender', 'story_line': 'A family gets lost on the road and stumbles upon a hidden, underground, devil-worshiping cult led by the fearsome Master and his servant Torgo.', 'release': '1966', 'imdb': 'http://www.imdb.com/title/tt0060666/', 'trailer_youtube_id': 'tRcGukCdr3c', 'trailer_youtube_url': 'https://www.youtube.com/watch?v=tRcGukCdr3c'})" class="col-md-4 col-sm-6 col-xs-12 movie-tile" ng-class="{'unrevealed': moviesRevealed < 2}">
+    <img src="http://ia.media-imdb.com/images/M/MV5BMTI1NTg1MTE3MF5BMl5BanBnXkFtZTcwNzA4NDgyMQ@@._V1_SX640_SY720_.jpg">
+    <h2>Manos: The Hands of Fate</h2>
+  </div>
+
+  <div ng-click="openModal({'itunes': 'https://itunes.apple.com/us/movie/gigli/id277334996', 'poster_image_url': 'http://ia.media-imdb.com/images/M/MV5BMTE5MTYxMDg5NV5BMl5BanBnXkFtZTYwNjc5MzQ3._V1_SX640_SY720_.jpg', 'title': 'Gigli', 'director': 'Martin Brest', 'amazon': 'https://itunes.apple.com/us/movie/gigli/id277334996', 'actors': 'Ben Affleck, Jennifer Lopez, Justin Bartha', 'story_line': 'The violent story about how a criminal lesbian, a tough-guy hit-man with a heart of gold, and a mentally challenged man came to be best friends through a hostage.', 'release': '2003', 'imdb': 'http://www.imdb.com/title/tt0299930/', 'trailer_youtube_id': '8UhCCHFZugE', 'trailer_youtube_url': 'https://www.youtube.com/watch?v=8UhCCHFZugE'})" class="col-md-4 col-sm-6 col-xs-12 movie-tile" ng-class="{'unrevealed': moviesRevealed < 3}">
+    <img src="http://ia.media-imdb.com/images/M/MV5BMTE5MTYxMDg5NV5BMl5BanBnXkFtZTYwNjc5MzQ3._V1_SX640_SY720_.jpg">
+    <h2>Gigli</h2>
+  </div>
+
+  <div ng-click="openModal({'itunes': 'https://itunes.apple.com/us/movie/the-danish-poet/id215690580', 'poster_image_url': 'https://image.tmdb.org/t/p/w500/sB9uqoD1GxCPLXzZyKMvw7ulGzH.jpg', 'title': 'The Danish Poet', 'director': 'Torill Kove', 'amazon': 'http://www.amazon.com/The-Danish-Poet-Torill-Kove/dp/B00I60E9K8', 'actors': 'Liv Ullman', 'story_line': 'A woman ponders over the strange coincidences that made her forefathers and -mothers meet and create the premises for her becoming the person that she is.', 'release': '2006', 'imdb': 'http://www.imdb.com/title/tt0933357/', 'trailer_youtube_id': 'mREkFAWiaLA', 'trailer_youtube_url': 'https://www.youtube.com/watch?v=mREkFAWiaLA'})" class="col-md-4 col-sm-6 col-xs-12 movie-tile" ng-class="{'unrevealed': moviesRevealed < 4}">
+    <img src="https://image.tmdb.org/t/p/w500/sB9uqoD1GxCPLXzZyKMvw7ulGzH.jpg">
+    <h2>The Danish Poet</h2>
+  </div>
+
+  <div ng-click="openModal({'itunes': '', 'poster_image_url': 'http://shtav.com/images/lineandturtle.png', 'title': 'Line and Turtle', 'director': 'Steven Barnhurst', 'amazon': '', 'actors': 'Line, Turtle', 'story_line': 'A line and a Turtle set off on a whirlwind event across Europe, which looks surprisingly like a blank canvas. On this journey, they not only find themselves, but they find love in each others strength and determination. This love will push them to their limits as they explore the breadth of their capabilities... Derp!', 'release': '2015', 'imdb': '', 'trailer_youtube_id': '7_h5I6mE7Dg', 'trailer_youtube_url': 'https://www.youtube.com/watch?v=7_h5I6mE7Dg'})" class="col-md-4 col-sm-6 col-xs-12 movie-tile" ng-class="{'unrevealed': moviesRevealed < 5}">
+    <img src="http://shtav.com/images/lineandturtle.png">
+    <h2>Line and Turtle</h2>
+  </div>
+
+</div>
+<!-- End Main Page Content -->
+
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.0/ui-bootstrap-tpls.js"></script>
+
+<!--app.js-->
+<script>/**
+ * Created by Shtav on 5/16/15.
+ */
+
+app = angular.module('myApp', ['ui.bootstrap']);
+
+app.controller('MainCtrl', ['$scope', '$interval', '$modal', '$http', function($scope, $interval, $modal, $http) {
+
+  /* processed movie data*/
+  
+
+  $scope.moviesRevealed = -1;
+  function revealMovie(){
+    $scope.moviesRevealed++;
+    if ($scope.moviesRevealed > 6) {
+      $interval.cancel(revealMovieInterval);
+    }
+  }
+  var revealMovieInterval = $interval(revealMovie, 300);
+
+
+
+  function openModal(movie) {
+    var modalInstance = $modal.open({
+      templateUrl: 'templates/modal.html',
+      controller: 'ModalInstanceCtrl',
+      resolve: { movie: function () { return movie; } },
+      size: 'lg'
+    });
+  }
+  $scope.openModal = openModal;
+}]);
+
+app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, movie, $sce, $window) {
+
+  $scope.movie = movie;
+  $scope.url = $sce.trustAsResourceUrl('http://www.youtube.com/embed/' + movie.trailer_youtube_id + '?autoplay=1&html5=1');
+
+  $scope.ok = function () { $modalInstance.close(); };
+
+  $scope.cancel = function () { $modalInstance.dismiss('cancel'); };
+
+  $scope.redirectTo = function(url){
+    if (url !== '') {
+      $window.open(url, '_blank');
+    }
+  };
+
+});
+
+</script>
+<!--app.js-->
+
+<!--services.js-->
+
+<!--services.js-->
+
+<!--modal.html-->
+<script type="text/ng-template" id="templates/modal.html">
+<div class="my-modal row">
+  <div class="col-sm-9 no-pad">
+    <div class='embed-responsive embed-responsive-16by9'>
+      <iframe class="embed-responsive-item" ng-src="{{url}}" frameborder='0' allowfullscreen></iframe>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-3">
+    <div class="row">
+      <div class="movie-links col-xs-6 col-sm-12">
+        <div class="row">
+          <a ng-click="redirectTo(movie.imdb)" class="imdb col-xs-12" ng-disabled="movie.imdb == ''" href="">
+            <div class="overlay">
+              <h5>Go to IMDb</h5>
+              <i class="glyphicon glyphicon-new-window"></i>
+            </div>
+          </a>
+          <a ng-click="redirectTo(movie.amazon)" class="amazon col-xs-6" ng-disabled="movie.amazon == ''" href="">
+            <div class="overlay">
+              <h5>Buy/Rent on Amazon</h5>
+              <i class="glyphicon glyphicon-new-window"></i>
+            </div>
+          </a>
+          <a ng-click="redirectTo(movie.itunes)" class="itunes col-xs-6" ng-disabled="movie.itunes == ''" href="">
+            <div class="overlay">
+              <h5>Buy/Rent on iTunes</h5>
+              <i class="glyphicon glyphicon-new-window"></i>
+            </div>
+          </a></div>
+      </div>
+      <div class="movie-info col-xs-6 col-sm-12">
+        <ul class="list-unstyled">
+          <li>
+            <p><strong>Release: </strong>{{movie.release}}</p>
+          </li>
+          <li>
+            <p><strong>Director: </strong>{{movie.director}}</p>
+          </li>
+          <li>
+            <p><strong>Stars: </strong>{{movie.actors}}</p>
+          </li>
+          <li>
+            <p><strong>Synopsis: </strong>{{movie.story_line}}</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div ng-click="$dismiss()" class="modal-exit">
+  <i class="glyphicon glyphicon-remove-circle"></i>
+</div>
+</script>
+<!--modal.html-->
+
+
+
+
+
+</body>
+</html>
