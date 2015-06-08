@@ -47,3 +47,9 @@
 
      o Contact me at school.kde@gmail.com or have a look at my current tinkering
        at shtav.com
+
+  Stolen Code
+  -----------
+
+  _decode_list and _decode_dict in entertainment_center.py courtesy of Mike Brennan
+  http://stackoverflow.com/questions/956867/how-to-get-string-objects-instead-of-unicode-ones-from-json-in-python

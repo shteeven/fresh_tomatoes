@@ -3,7 +3,7 @@ from media import Movie
 
 # _decode_list and _decode_dict courtesy of Mike Brennan
 # http://stackoverflow.com/questions/956867/how-to-get-string-objects-instead-of-unicode-ones-from-json-in-python
-def _decode_list(data):
+def _decode_list(data):  # removes the unicode identifier (u"some str")
     rv = []
     for item in data:
         if isinstance(item, unicode):
@@ -16,7 +16,7 @@ def _decode_list(data):
     return rv
 
 
-def _decode_dict(data):
+def _decode_dict(data):  # removes the unicode identifier (u"some str")
     rv = {}
     for key, value in data.iteritems():
         if isinstance(key, unicode):
